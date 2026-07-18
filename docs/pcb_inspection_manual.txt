@@ -1,0 +1,89 @@
+PCB Inspection and Repair Reference Notes
+
+1. Solder Bridge
+A solder bridge occurs when excess solder connects two pads or pins
+that should not be electrically connected, usually due to too much
+solder paste or poor reflow profile. It causes short circuits and
+unpredictable board behavior.
+Repair: Use desoldering braid or a solder sucker to remove the excess
+solder, then re-inspect under magnification.
+Inspection Method: Visual inspection under 10x-20x magnification, or
+automated optical inspection (AOI).
+Precautions: Ensure correct solder paste volume and reflow oven
+temperature profile to prevent recurrence.
+
+2. Cold Solder Joint
+A cold solder joint happens when the solder does not fully melt or
+bond to the pad and lead, often due to insufficient heat during
+soldering, movement during cooling, or contamination. It appears
+dull, grainy, or cracked instead of shiny and smooth.
+Repair: Reheat the joint with a soldering iron and add a small amount
+of fresh solder; keep the joint still while it cools.
+Inspection Method: Visual inspection for dull/grainy texture; X-ray
+inspection for hidden joints (e.g. BGA packages).
+Precautions: Maintain proper iron temperature (~350°C for leaded
+solder) and avoid disturbing the joint while cooling.
+
+3. Missing Component
+A missing component defect occurs when a required part (resistor,
+capacitor, IC, etc.) was not placed during pick-and-place, often due
+to a feeder jam or a programming error in the pick-and-place machine.
+Repair: Manually place and solder the correct component per the BOM
+(bill of materials) and schematic.
+Inspection Method: Automated Optical Inspection (AOI) comparing
+against the reference/golden board image; manual visual check.
+Precautions: Regularly calibrate feeders and verify BOM/placement
+program before production runs.
+
+4. Component Misalignment
+Misalignment occurs when a component is placed but rotated or shifted
+from its intended footprint, often due to pick-and-place placement
+error or component movement during reflow (tombstoning risk).
+Repair: Reheat the solder joints and manually realign the component
+using tweezers, then allow it to reflow/cool in the correct position.
+Inspection Method: AOI with footprint overlay comparison; visual
+inspection under magnification.
+Precautions: Verify pick-and-place placement accuracy and stencil
+alignment regularly.
+
+5. Burn Mark / Thermal Damage
+A burn mark indicates the board or a component was exposed to
+excessive heat, often from a short circuit, incorrect component
+rating, or a soldering iron held too long in one spot.
+Repair: Replace the damaged component and inspect the surrounding
+copper traces for damage; replace the board section if traces are
+compromised.
+Inspection Method: Visual inspection for discoloration; thermal
+imaging during power-on testing.
+Precautions: Verify component power ratings and check for short
+circuits before applying power.
+
+6. Short Circuit
+A short circuit is an unintended low-resistance connection between
+two nodes that should be isolated, often caused by a solder bridge,
+conductive debris, or a design/layout error.
+Recommended action: Do not power on the board until the short is
+identified and cleared. Use a multimeter in continuity mode to trace
+the short before resuming testing.
+Inspection Method: Continuity testing, thermal imaging (a short often
+heats up under power), visual inspection.
+Precautions: Keep the work area free of conductive debris (solder
+balls, wire clippings) and use ESD-safe handling.
+
+7. Excess Solder
+Excess solder appears as a large blob or dome around a joint. It can
+hide underlying defects and increase the risk of bridging to
+neighboring pads.
+Repair: Remove excess solder with desoldering braid, leaving a
+smooth, correctly-shaped fillet.
+Inspection Method: Visual inspection; AOI solder-volume checks.
+Precautions: Calibrate solder paste stencil thickness and dispenser
+volume settings.
+
+General IPC-A-610 Note
+IPC-A-610 is the industry-accepted standard for acceptability of
+electronic assemblies, defining Class 1 (general), Class 2
+(dedicated service), and Class 3 (high-reliability) criteria for
+solder joints, component placement, and overall workmanship. When in
+doubt about whether a defect is acceptable, refer to the applicable
+IPC-A-610 class for the product being inspected.
