@@ -1,166 +1,225 @@
-# 🤖 AI-Based PCB Visual Inspection Assistant
+# # 🤖 AI-Based PCB Visual Inspection Assistant
 
-A local, offline capstone project that combines **Vision AI + RAG + Report Generation**
-to simulate an industrial PCB quality-inspection assistant — built for a 2–3 hour workshop.
+An AI-powered PCB inspection system that automates defect detection using Vision AI, retrieves repair guidance through Retrieval-Augmented Generation (RAG), and generates detailed inspection reports.
 
-## The Problem
-A PCB manufacturing company produces thousands of PCBs a day. Manual inspection is
-slow, inconsistent, and expensive. This assistant automates the first pass:
+---
 
-1. Look at a PCB image and detect defects (Vision AI)
-2. Explain the defect using real reference material (RAG)
-3. Produce a structured, saveable inspection report
+## 📌 Overview
 
-## Architecture
+Manual PCB inspection is time-consuming and prone to human error. This project provides an intelligent inspection assistant that:
+
+- Detects PCB defects using a Vision Language Model
+- Retrieves relevant repair information from a PCB knowledge base
+- Generates a structured inspection report
+- Provides a simple Streamlit web interface
+
+The project runs completely offline using **Ollama**, making it suitable for laboratories, research, and industrial demonstrations.
+
+---
+
+## 🚀 Features
+
+- 🔍 AI-based PCB defect detection
+- 📚 RAG-powered repair recommendations
+- 📄 Automatic inspection report generation
+- 💻 Streamlit Web Application
+- ⚡ Local execution using Ollama
+- 🧠 FAISS vector database for fast document retrieval
+
+---
+
+## 🏗️ Project Architecture
 
 ```
 PCB Image
-   │
-   ▼
-Ollama Vision Model (llava / gemma3)
-   │
-   ▼
-Detect Defect ──► Detected Defects text
-   │
-   ▼
-RAG Engine (FAISS + HuggingFace embeddings + Ollama LLM)
-   │  queries docs/*.txt (inspection manuals, soldering guides, IPC notes)
-   ▼
-Repair / Cause / Precautions
-   │
-   ▼
-Final Inspection Report (saved to reports/)
+     │
+     ▼
+Vision AI (Ollama)
+     │
+     ▼
+Defect Detection
+     │
+     ▼
+RAG Engine
+(FAISS + LangChain + Ollama)
+     │
+     ▼
+Repair Guidance
+     │
+     ▼
+Inspection Report
 ```
 
-Only three AI concepts are used: **Vision, RAG, and Report Generation** — kept
-intentionally minimal so the workshop focuses on the pipeline, not framework setup.
+---
 
-## Project Structure
+## 📁 Project Structure
 
 ```
 PCB_AI_Assistant/
-├── images/                     # PCB images to inspect (add your own .jpg/.png)
+│
+├── app.py                     # Streamlit application
+├── pipeline.py                # Complete inspection pipeline
+├── vision_inspector.py        # Vision AI module
+├── rag_engine.py              # RAG implementation
+├── report_generator.py        # Report generation
 ├── docs/
-│   └── pcb_inspection_manual.txt   # sample knowledge base (defects, repair, IPC notes)
-├── reports/                    # generated inspection reports land here
-├── vision_inspector.py         # Vision layer — talks to Ollama vision model
-├── rag_engine.py                # RAG layer — FAISS + HuggingFace + Ollama LLM
-├── report_generator.py          # Merges vision + RAG output into a report
-├── pipeline.py                  # CLI orchestrator: image in -> report out
-├── app.py                       # Streamlit UI
+│   └── pcb_inspection_manual.txt
+├── images/
+├── reports/
 ├── requirements.txt
 └── README.md
 ```
 
-## Setup
+---
 
-1. **Install Ollama** (https://ollama.com) and start the server:
-   ```bash
-   ollama serve
-   ```
+## 🛠️ Technologies Used
 
-2. **Pull the two local models you need:**
-   ```bash
-   ollama pull llava      # vision model — reads PCB images
-   ollama pull llama3     # text model — powers the RAG explanations
-   ```
-   (Any Ollama vision-capable model works — e.g. `gemma3:4b` — just update
-   `VISION_MODEL` in `vision_inspector.py` to match.)
+- Python
+- Streamlit
+- Ollama
+- LangChain
+- FAISS
+- HuggingFace Embeddings
+- LLaVA / Gemma Vision Model
+- Llama 3
 
-3. **Create a virtual environment and install Python dependencies:**
-   ```bash
-   python -m venv venv
-   venv\Scripts\activate      # Windows
-   source venv/bin/activate   # macOS/Linux
-   pip install -r requirements.txt
-   ```
+---
 
-4. **Add your data:**
-   - Drop PCB images (good and defective) into `images/`.
-   - Add more `.txt` reference notes into `docs/` (a starter manual is
-     already included). To use real PDFs (datasheets, IPC standards),
-     swap the loader in `rag_engine.py` for a PDF loader — see the
-     comment in `build_vectorstore()`.
+## 📋 Requirements
 
-## Usage
+- Python 3.10+
+- Ollama
+- Streamlit
+- LangChain
+- FAISS
+- HuggingFace Transformers
 
-**Option A — Command line, one image at a time:**
+Install dependencies:
+
 ```bash
-python pipeline.py images/pcb_missing_component.jpg
+pip install -r requirements.txt
 ```
-This prints the vision result, the RAG repair guidance, and saves a full
-report to `reports/`.
 
-**Option B — Streamlit web app:**
+---
+
+## ⚙️ Setup
+
+### 1. Install Ollama
+
+Start Ollama server:
+
+```bash
+ollama serve
+```
+
+### 2. Download Models
+
+```bash
+ollama pull llava
+ollama pull llama3
+```
+
+You can also use other vision models supported by Ollama.
+
+---
+
+## ▶️ Running the Project
+
+### Command Line
+
+```bash
+python pipeline.py images/sample.jpg
+```
+
+### Streamlit UI
+
 ```bash
 streamlit run app.py
 ```
-Upload a PCB image in the browser, click **Run Inspection**, and download
-the generated report.
 
-## Example Output
+Open the browser, upload a PCB image, and click **Run Inspection**.
+
+---
+
+## 🔄 Workflow
+
+1. Upload PCB image
+2. Vision AI identifies defects
+3. Defect summary is sent to the RAG engine
+4. Knowledge base retrieves repair information
+5. Final inspection report is generated
+6. Report can be downloaded
+
+---
+
+## 📄 Sample Report
 
 ```
---------------------------------
-PCB Inspection Report
---------------------------------
-Image: pcb5.jpg
-Timestamp: 2026-07-18 10:40:02
-
-Inspection Result:
 PCB Status: FAIL
-Detected Components: Resistors, Capacitors, IC
-Detected Defects: Missing Resistor
-Defect Location: Bottom Right
-Possible Cause: Component placement issue
-Severity: High
-Recommendation: Replace resistor
-Confidence: Medium
 
---------------------------------
-Repair & Reference Guidance (RAG)
---------------------------------
-Cause: Missing component, typically due to a pick-and-place feeder
-jam or programming error.
-Repair Steps: Manually place and solder the correct resistor per
-the BOM and schematic.
-Inspection Method: Automated Optical Inspection (AOI) against the
-golden board image, or manual visual check.
-Precautions: Regularly calibrate feeders and verify the BOM before
-production runs.
+Detected Defects:
+- Missing Resistor
 
---------------------------------
-Inspection Time: 2.31 seconds
---------------------------------
+Repair Guidance:
+- Replace the missing resistor
+- Verify solder joints
+- Perform AOI inspection
+
+Inspection Time:
+2.4 seconds
 ```
 
-## Workshop Flow (2–3 hours)
+---
 
-| Part | Time | Topic |
-|------|------|-------|
-| 1 | 20 min | Traditional vs AI visual inspection |
-| 2 | 30 min | Run the vision model on sample PCB images |
-| 3 | 20 min | Structured defect classification prompt |
-| 4 | 20 min | Build the RAG knowledge base from `docs/` |
-| 5 | 20 min | Connect vision output → RAG query (one AI calls another) |
-| 6 | 20 min | Generate and review the final report |
+## 📚 Knowledge Base
 
-## Learning Outcomes
-- Difference between traditional computer vision and vision-language models
-- Running a local multimodal model with Ollama
-- Building a simple RAG knowledge base for a domain (PCB repair)
-- Chaining model outputs (vision → RAG) into one pipeline
-- Producing a structured, presentation-ready inspection report
+The RAG engine uses documents stored inside:
 
-## Notes & Extensions
-- The vector store is cached per process/session — rebuild it if you
-  update `docs/`.
-- `extract_defect_summary()` in `vision_inspector.py` does simple
-  line parsing, not strict JSON — good enough for a workshop; for
-  production, validate the model's output against a schema.
-- To move this off local Ollama (e.g. for cloud deployment), swap
-  `Ollama(...)` for a hosted LLM (Groq, HF Inference API) — vision-capable
-  hosted APIs would replace `vision_inspector.py`'s Ollama call similarly.
+```
+docs/
+```
 
-## License
-[Add your license here]
+You can add:
+
+- PCB inspection manuals
+- IPC standards
+- Datasheets
+- Repair guides
+- Manufacturing SOPs
+
+---
+
+## 🎯 Applications
+
+- PCB Manufacturing
+- Quality Control
+- Electronics Production
+- Educational Demonstrations
+- AI Research
+- Industrial Automation
+
+---
+
+## 🔮 Future Improvements
+
+- YOLO-based defect localization
+- Multi-defect detection
+- PDF knowledge ingestion
+- OCR for PCB labels
+- Database integration
+- Real-time camera support
+- Dashboard analytics
+
+---
+
+## 👨‍💻 Author
+
+**Aditya Jadhav**
+
+Electronics Engineering Student
+
+---
+
+## 📜 License
+
+This project is developed for educational and research purposes.
